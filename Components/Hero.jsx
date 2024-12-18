@@ -1,7 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../src/assets/Hero.png';
 
 const Hero = () => {
+    const navigate = useNavigate();
+
     return (
         <div
             style={{
@@ -20,7 +23,7 @@ const Hero = () => {
             {/* Left Section: Text and Buttons */}
             <div
                 style={{
-                    paddingLeft:"100px",
+                    paddingLeft: "100px",
                     color: 'white',
                     width: '50%', // Use half the width for text
                     display: 'flex',
@@ -36,9 +39,10 @@ const Hero = () => {
                         fontFamily: 'Inria Sans, sans-serif',
                         fontWeight: '400',
                         margin: '0',
+                        color:'black',
                     }}
                 >
-                    Evaluation-Action Driven <br /> AI Development
+                    Returns AI Copilot
                 </h1>
                 <p
                     style={{
@@ -47,17 +51,29 @@ const Hero = () => {
                         fontWeight: '300',
                         lineHeight: '1.5',
                         margin: '0',
+                        color:'black',
                     }}
                 >
-                    Empowering businesses to detect and redact sensitive <br />
-                    content in AI-powered applications with ease.
+                    Our AI copilot manage e-commerce returns end-to-end with <br/>minimal human intervention and maximum efficiency.
+                </p>
+                <p
+                    style={{
+                        fontSize: '20px',
+                        fontFamily: 'Inria Sans, sans-serif',
+                        fontWeight: '300',
+                        lineHeight: '1.5',
+                        margin: '0',
+                        color:'black',
+                    }}
+                >
+                    Just set your return goal, then let AI run everything, saving <br/> up to 70% cost.
                 </p>
                 {/* Buttons */}
                 <div style={{ display: 'flex', gap: '20px' }}>
                     <button
                         style={{
                             padding: '10px 20px',
-                            backgroundColor: '#black',
+                            backgroundColor: 'black',
                             border: 'none',
                             color: 'white',
                             fontSize: '18px',
@@ -71,6 +87,7 @@ const Hero = () => {
                         onMouseLeave={(e) =>
                             (e.target.style.backgroundColor = 'black')
                         }
+                        onClick={() => navigate('/waitlist')}
                     >
                         Join the Waitlist
                     </button>
@@ -91,6 +108,7 @@ const Hero = () => {
                         onMouseLeave={(e) =>
                             (e.target.style.backgroundColor = '#4E9490')
                         }
+                        onClick={() => navigate('/demo')}
                     >
                         Book a Demo
                     </button>

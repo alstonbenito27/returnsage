@@ -1,14 +1,34 @@
 import Navbar from '../Components/Navbar';
 import Hero from '../Components/Hero';
 import Features from '../Components/Features';
+import RowFlex from '../Components/Rowflex';
+import Pricing from '../Components/Pricing';
+import Footer from '../Components/Footer';
+import Demo from '../Components/Demo'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Waitlist from '../Components/BookWaitlist';
 
-function App() {
-  return (
-    <div>
+const LandingPage = () => (
+  <div>
       <Navbar />
       <Hero />
       <Features />
-    </div>
+      <RowFlex />
+      <Pricing />
+      <Footer />
+  </div>
+);
+
+
+const App = () => {
+  return (
+    <Router>
+            <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/demo" element={<Demo />} />
+                <Route path="/waitlist" element={<Waitlist/>} />
+            </Routes>
+        </Router>
   );
 }
 

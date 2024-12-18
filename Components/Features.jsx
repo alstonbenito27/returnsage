@@ -5,9 +5,10 @@ import three from "../src/assets/3.png";
 import four from "../src/assets/4.png";
 const Features = () => {
     return (
-        <div style={containerStyle}>
+        
+        <div id = "features" style={containerStyle}>
             {/* Section Title */}
-            <div style={titleStyle}>ML/AI Powered Returns Manager</div>
+            <div style={titleStyle1}>ML/AI Powered Returns Manager</div>
             <div style={titleStyle2}>Our solution stop the reverse/returns before it starts</div>
             {/* Feature Cards */}
             <div style={featureCardStyle}>
@@ -21,19 +22,20 @@ const Features = () => {
                         />
                     </div>
                     <div style={textContainerStyle}>
-                        <div style={featureTitleStyle}>Advanced Data Redaction</div>
+                        <div style={featureTitleStyle}>1. Predict return risk</div>
                         <div style={featureDescriptionStyle}>
-                            Automatically identify and redact sensitive information in AI models, ensuring compliance and privacy protection.
+                        Predict the likelihood of return before the customer
+                        completes the purchase and identify the risky returns
                         </div>
                     </div>
                 </div>
 
                 {/* Feature 2 */}
-                <div style={featureRowStyleAlt}>
+                <div style={{ ...featureRowStyleAlt, marginBottom: "40px" }}>
                     <div style={textContainerStyle}>
-                        <div style={featureTitleStyle}>Seamless Integration</div>
+                        <div style={featureTitleStyle}>2.Prevent with inline actions</div>
                         <div style={featureDescriptionStyle}>
-                            Integrate effortlessly with existing workflows and AI pipelines to enhance efficiency and productivity.
+                        With our suite of preventive inline personalized actions, brands can mitigate the risk of returns and delight your loyal customers before they order completion.
                         </div>
                     </div>
                     <div style={imageContainerStyle}>
@@ -55,9 +57,9 @@ const Features = () => {
                         />
                     </div>
                     <div style={textContainerStyle}>
-                        <div style={featureTitleStyle}>Customizable Policies</div>
+                        <div style={featureTitleStyle}>3. Protect from fraud</div>
                         <div style={featureDescriptionStyle}>
-                            Define and enforce tailored redaction rules to meet unique business and compliance needs.
+                        With our machine learning solution, we help brands to de-clutter fraud/abusive from low risk customers, so brands can delight low-risk high-value customers while restricting fraudsters.
                         </div>
                     </div>
                 </div>
@@ -65,9 +67,9 @@ const Features = () => {
                 {/* Feature 4 */}
                 <div style={featureRowStyleAlt}>
                     <div style={textContainerStyle}>
-                        <div style={featureTitleStyle}>Real-Time Analysis</div>
+                        <div style={featureTitleStyle}>4. Auto-resolve every return</div>
                         <div style={featureDescriptionStyle}>
-                            Conduct real-time data analysis to detect and address privacy risks on-the-fly.
+                        Our advanced ML solution will review every return to take optimized decision that balance the cost to business, sustainability, and customer experience. More importantly, with minimal to no human intervention.  
                         </div>
                     </div>
                     <div style={imageContainerStyle}>
@@ -97,7 +99,7 @@ const containerStyle = {
     padding: "50px 20px",
 };
 
-const titleStyle = {
+const titleStyle1 = {
     fontSize: "40px",
     color: "black",
     fontFamily: "Inria Sans",
@@ -134,7 +136,6 @@ const featureRowStyleAlt = {
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
-    marginBottom: "40px",
     gap: "20px",
     flexWrap: "wrap",
 };
