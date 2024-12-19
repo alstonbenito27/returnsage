@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
-
+import Footer from './Footer';
 const Waitlist = () => {
     const [hover, setHover] = useState(false);
     const [formData, setFormData] = useState({
@@ -68,11 +68,12 @@ const Waitlist = () => {
         <div style={{ backgroundColor: 'white', minHeight: '100vh' }}>
             <Navbar />
 
-            <div style={{ padding: '100px 200px' }}>
+            <div className="waitlist-container">
                 {/* Back Button */}
                 <div
                     onClick={handleRedirect}
                     style={{
+                        marginTop:'60px',
                         padding: '10px 20px',
                         backgroundColor: hover ? '#5cae9d' : '#6CCDC7',
                         borderRadius: '5px',
@@ -90,23 +91,18 @@ const Waitlist = () => {
                     Back
                 </div>
 
-                <div style={{ ...commonTextStyles, fontSize: 50, paddingLeft:'35%' }}>
+                <div className="form-title">
                     Join the Waitlist
                 </div>
+
                 {/* Form */}
                 <form
                     onSubmit={handleSubmit}
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '20px',
-                        width: '50%',
-                        margin: '0 auto',
-                    }}
+                    className="form-container"
                 >
                     {['name', 'email', 'number', 'company', 'howDoYouKnow'].map((field, index) => (
                         <div key={index}>
-                            <label htmlFor={field} style={{ fontSize: '16px', marginBottom: '5px', display: 'block' }}>
+                            <label htmlFor={field}>
                                 {field === 'howDoYouKnow'
                                     ? 'How did you hear about us?'
                                     : `Your ${field.charAt(0).toUpperCase() + field.slice(1)}`}
@@ -117,15 +113,6 @@ const Waitlist = () => {
                                     id={field}
                                     value={formData[field]}
                                     onChange={handleChange}
-                                    style={{
-                                        padding: '10px',
-                                fontSize: '16px',
-                                borderRadius: '5px',
-                                border: '1px solid #ccc',
-                                backgroundColor: 'white',
-                                color: 'black',
-                                width: '100%',
-                                    }}
                                 >
                                     <option value="">Select an option</option>
                                     <option value="Social Media">Social Media</option>
@@ -141,24 +128,7 @@ const Waitlist = () => {
                                     value={formData[field]}
                                     onChange={handleChange}
                                     placeholder={`Your ${field}`}
-                                    style={{
-                                        padding: '10px',
-                                        fontSize: '16px',
-                                        borderRadius: '5px',
-                                        border: '1px solid #ccc',
-                                        backgroundColor: 'white',
-                                        color: 'black',
-                                        width: '100%',
-                                        caretColor: 'black', // Ensures the cursor is visible
-                                    }}
-                                    onFocus={(e) =>
-                                        (e.target.style.borderColor = '#6CCDC7') // Highlight border on focus
-                                    }
-                                    onBlur={(e) =>
-                                        (e.target.style.borderColor = '#ccc') // Reset border on blur
-                                    }
                                 />
-
                             )}
                             {errors[field] && <p style={{ color: 'red', fontSize: '12px' }}>{errors[field]}</p>}
                         </div>
@@ -167,29 +137,119 @@ const Waitlist = () => {
                     {/* Submit Button */}
                     <button
                         type="submit"
-                        style={{
-                            padding: '10px 20px',
-                            backgroundColor: '#6CCDC7',
-                            borderRadius: '5px',
-                            color: 'white',
-                            fontSize: '16px',
-                            fontFamily: 'Inria Sans',
-                            cursor: 'pointer',
-                            width: '100%',
-                            marginTop: '10px',
-                        }}
+                        className="submit-button"
                     >
                         Submit
                     </button>
                 </form>
             </div>
+
+            <style>{`
+                /* Base Styling */
+                .waitlist-container {
+                    padding: 100px 200px;
+                    padding-top: 80px;
+                }
+
+                .form-title {
+                    color: black;
+                    font-family: 'Inria Sans';
+                    font-weight: 400;
+                    word-wrap: break-word;
+                    font-size: 50px;
+                    text-align: center;
+                    margin-bottom: 40px;
+                }
+
+                .form-container {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 20px;
+                    width: 50%;
+                    margin: 0 auto;
+                }
+
+                .form-container input,
+                .form-container select {
+                    padding: 10px;
+                    font-size: 16px;
+                    border-radius: 5px;
+                    border: 1px solid #ccc;
+                    background-color: white;
+                    color: black;
+                    width: 100%;
+                }
+
+                .form-container button {
+                    padding: 10px 20px;
+                    background-color: #6CCDC7;
+                    border-radius: 5px;
+                    color: white;
+                    font-size: 16px;
+                    font-family: 'Inria Sans';
+                    cursor: pointer;
+                    width: 100%;
+                    margin-top: 10px;
+                }
+
+                /* Media Queries for Responsiveness */
+                @media (max-width: 768px) {
+                    .waitlist-container {
+                        padding: 20px;
+                    }
+
+                    .form-title {
+                        font-size: 32px;
+                        text-align: center;
+                    }
+
+                    .form-container {
+                        width: 100%;
+                        margin: 0;
+                    }
+
+                    .form-container input,
+                    .form-container select,
+                    .form-container button {
+                        width: 100%;
+                        font-size: 14px;
+                    }
+
+                    .form-container label {
+                        font-size: 14px;
+                    }
+                }
+
+                @media (max-width: 480px) {
+                    .form-title {
+                        font-size: 28px;
+                    }
+
+                    .form-container {
+                        width: 100%;
+                        padding: 0 10px;
+                    }
+
+                    .form-container input,
+                    .form-container select,
+                    .form-container button {
+                        padding: 12px;
+                        font-size: 14px;
+                    }
+
+                    .form-container label {
+                        font-size: 12px;
+                    }
+
+                    .submit-button {
+                        padding: 12px 24px;
+                        font-size: 14px;
+                    }
+                }
+            `}</style>
+            <Footer />
         </div>
     );
 };
-const commonTextStyles = {
-    color: 'black',
-    fontFamily: 'Inria Sans',
-    fontWeight: '400',
-    wordWrap: 'break-word',
-};
+
 export default Waitlist;

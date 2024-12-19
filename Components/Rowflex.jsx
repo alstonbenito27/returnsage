@@ -13,56 +13,81 @@ const RowFlex = () => {
         },
         {
             heading: "Reduce Operations",
-            text: "With a fully automated decision to the copilot, brands will have no to minimal human intervention to manage returns.  ",
+            text: "With a fully automated decision to the copilot, brands will have no to minimal human intervention to manage returns.",
         },
         {
             heading: "Resolve root causes",
-            text: "Our action based analytics will help brands to not just root cause but resolve the issues with AI recommendtion.",
+            text: "Our action based analytics will help brands to not just root cause but resolve the issues with AI recommendation.",
         },
     ];
 
     return (
-        <div style={rowStyle}>
-            {content.map((item, index) => (
-                <div key={index} style={columnStyle}>
-                    <h3 style={headingStyle}>{item.heading}</h3>
-                    <p style={textStyle}>{item.text}</p>
-                </div>
-            ))}
-        </div>
+        <>
+            <style>
+                {`
+                    /* Row Flex Container */
+                    .row-flex-container {
+                        background-color: #EEF4F3;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: flex-start;
+                        gap: 20px;
+                        padding: 20px;
+                        flex-wrap: wrap; /* Ensures responsive layout for smaller screens */
+                    }
+
+                    /* Column Style */
+                    .row-flex-column {
+                        flex: 1;
+                        max-width: 23%; /* Ensures 4 items fit within the row */
+                        text-align: center;
+                        background-color: #EEF4F3;
+                        padding: 15px;
+                    }
+
+                    /* Heading Style */
+                    .row-flex-heading {
+                        font-size: 20px;
+                        font-weight: 600;
+                        margin-bottom: 10px;
+                        color: #333;
+                    }
+
+                    /* Text Style */
+                    .row-flex-text {
+                        font-size: 16px;
+                        font-weight: 300;
+                        color: #555;
+                    }
+
+                    /* Media Queries for Responsiveness */
+                    @media (max-width: 768px) {
+                        .row-flex-column {
+                            max-width: 100%; /* Columns stack on smaller screens */
+                            margin-bottom: 20px; /* Add space between columns */
+                        }
+
+                        .row-flex-heading {
+                            font-size: 18px;
+                        }
+
+                        .row-flex-text {
+                            font-size: 14px;
+                        }
+                    }
+                `}
+            </style>
+
+            <div className="row-flex-container">
+                {content.map((item, index) => (
+                    <div key={index} className="row-flex-column">
+                        <h3 className="row-flex-heading">{item.heading}</h3>
+                        <p className="row-flex-text">{item.text}</p>
+                    </div>
+                ))}
+            </div>
+        </>
     );
-};
-
-// Styles
-const rowStyle = {
-    backgroundColor:"#EEF4F3",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    gap: "20px",
-    padding: "20px",
-    flexWrap: "wrap", // Ensures responsive layout for smaller screens
-};
-
-const columnStyle = {
-    flex: "1", // Each item takes an equal portion of the available space
-    maxWidth: "23%", // Ensures 4 items fit within the row
-    textAlign: "center",
-    backgroundColor: "#EEF4F3",
-    padding: "15px",
-};
-
-const headingStyle = {
-    fontSize: "20px",
-    fontWeight: "600",
-    marginBottom: "10px",
-    color: "#333",
-};
-
-const textStyle = {
-    fontSize: "16px",
-    fontWeight: "300",
-    color: "#555",
 };
 
 export default RowFlex;

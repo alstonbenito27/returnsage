@@ -58,125 +58,183 @@ const PricingSection = () => {
         },
     ];
     return (
-        <div id="pricing" style={sectionContainerStyle}>
-            {/* Section Heading */}
-            <div style={headingContainerStyle}>
-                <h1 style={mainHeadingStyle}>Plans & Pricing</h1>
-                <p style={subHeadingStyle}>
-                    No credit card required. No risk.
+        <>
+            <style>
+                {`
+                    /* Section Container */
+                    .pricing-section-container {
+                        padding: 50px 10px;
+                        background-color: #F9F9F9;
+                        text-align: center;
+                    }
+
+                    /* Heading Container */
+                    .heading-container {
+                        margin-bottom: 40px;
+                    }
+
+                    .main-heading {
+                        font-size: 36px;
+                        color: #333;
+                        font-family: Inria Sans;
+                        font-weight: 600;
+                    }
+
+                    .sub-heading {
+                        font-size: 18px;
+                        color: #555;
+                        font-family: Inria Sans;
+                        font-weight: 300;
+                        margin-top: 10px;
+                    }
+
+                    /* Pricing Cards Container */
+                    .pricing-container {
+                        display: flex;
+                        justify-content: space-around;
+                        flex-wrap: wrap;
+                        gap: 20px;
+                        margin-top: 20px;
+                    }
+
+                    /* Pricing Card */
+                    .pricing-card {
+                        width: 250px;
+                        background-color: white;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                        padding: 20px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        margin-bottom: 20px;
+                        transition: all 0.3s ease-in-out;
+                    }
+
+                    .pricing-card:hover {
+                        transform: translateY(-10px);
+                    }
+
+                    /* Plan Title */
+                    .plan-title {
+                        font-size: 22px;
+                        font-weight: 600;
+                        color: #333;
+                        margin-bottom: 10px;
+                    }
+
+                    /* Plan Price */
+                    .plan-price {
+                        font-size: 18px;
+                        font-weight: 400;
+                        color: #555;
+                        margin-bottom: 20px;
+                    }
+
+                    /* Separator */
+                    .separator {
+                        width: 100%;
+                        border: none;
+                        border-top: 1px solid #ddd;
+                        margin-bottom: 15px;
+                    }
+
+                    /* Features List */
+                    .features-list {
+                        list-style: none;
+                        padding: 0;
+                        margin-bottom: 20px;
+                        text-align: left;
+                    }
+
+                    .feature-item {
+                        font-size: 14px;
+                        color: #666;
+                        margin-bottom: 8px;
+                    }
+
+                    /* Button */
+                    .get-started-button {
+                        padding: 10px 20px;
+                        background-color: #000;
+                        color: #fff;
+                        border: none;
+                        border-radius: 5px;
+                        cursor: pointer;
+                        font-size: 16px;
+                        transition: background-color 0.3s ease;
+                    }
+
+                    .get-started-button:hover {
+                        background-color: #444;
+                    }
+
+                    /* Media Queries for Responsiveness */
+                    @media (max-width: 768px) {
+                        .pricing-card {
+                            width: 100%; /* Cards take full width on smaller screens */
+                            margin-bottom: 30px;
+                        }
+
+                        .main-heading {
+                            font-size: 28px;
+                        }
+
+                        .sub-heading {
+                            font-size: 16px;
+                        }
+
+                        .plan-title {
+                            font-size: 20px;
+                        }
+
+                        .plan-price {
+                            font-size: 16px;
+                        }
+
+                        .feature-item {
+                            font-size: 12px;
+                        }
+
+                        .get-started-button {
+                            padding: 12px 24px;
+                        }
+                    }
+                `}
+            </style>
+
+            <div className="pricing-section-container" id="pricing">
+                {/* Section Heading */}
+                <div className="heading-container">
+                    <h1 className="main-heading">Plans & Pricing</h1>
+                    <p className="sub-heading">No credit card required. No risk.</p>
+                </div>
+
+                {/* Pricing Cards */}
+                <div className="pricing-container">
+                    {pricingPlans.map((plan, index) => (
+                        <div key={index} className="pricing-card">
+                            <h3 className="plan-title">{plan.title}</h3>
+                            <p className="plan-price">{plan.price}</p>
+                            <hr className="separator" />
+                            <ul className="features-list">
+                                {plan.features.map((feature, idx) => (
+                                    <li key={idx} className="feature-item">
+                                        {feature}
+                                    </li>
+                                ))}
+                            </ul>
+                            <button className="get-started-button">Get Started</button>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Contact Link */}
+                <p className="sub-heading">
+                    Got Questions? <a href="mailto:alstonbeny@gmail.com" style={{ color: "blue", textDecoration: "none" }}>Contact Us</a>
                 </p>
             </div>
-            
-            {/* Pricing Cards */}
-            <div style={pricingContainerStyle}>
-                {pricingPlans.map((plan, index) => (
-                    <div key={index} style={pricingCardStyle}>
-                        <h3 style={planTitleStyle}>{plan.title}</h3>
-                        <p style={planPriceStyle}>{plan.price}</p>
-                        <hr style={separatorStyle} />
-                        <ul style={featuresStyle}>
-                            {plan.features.map((feature, idx) => (
-                                <li key={idx} style={featureItemStyle}>
-                                    {feature}
-                                </li>
-                            ))}
-                        </ul>
-                        <button style={buttonStyle}>Get Started</button>
-                    </div>
-                ))}
-            </div>
-            <p style={subHeadingStyle}>
-                Got Questions? <a href="mailto:alstonbeny@gmail.com" style={{ color: "blue", textDecoration: "none" }}>Contact Us</a>
-            </p>
-        </div>
+        </>
     );
-};
-
-// Styles
-const sectionContainerStyle = {
-    padding: "50px 10px",
-    backgroundColor: "#F9F9F9",
-    textAlign: "center",
-};
-
-const headingContainerStyle = {
-    marginBottom: "40px",
-};
-
-const mainHeadingStyle = {
-    fontSize: "36px",
-    color: "#333",
-    fontFamily: "Inria Sans",
-    fontWeight: "600",
-};
-
-const subHeadingStyle = {
-    fontSize: "18px",
-    color: "#555",
-    fontFamily: "Inria Sans",
-    fontWeight: "300",
-    marginTop: "10px",
-};
-
-const pricingContainerStyle = {
-    display: "flex",
-    justifyContent: "space-around",
-    flexWrap: "wrap",
-    gap: "0px",
-};
-
-const pricingCardStyle = {
-    width: "250px",
-    backgroundColor: "white",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-    padding: "20px",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-};
-
-const planTitleStyle = {
-    fontSize: "22px",
-    fontWeight: "600",
-    color: "#333",
-    marginBottom: "10px",
-};
-
-const planPriceStyle = {
-    fontSize: "18px",
-    fontWeight: "400",
-    color: "#555",
-    marginBottom: "20px",
-};
-
-const separatorStyle = {
-    width: "100%",
-    border: "none",
-    borderTop: "1px solid #ddd",
-    marginBottom: "15px",
-};
-
-const featuresStyle = {
-    listStyle: "none",
-    padding: "0",
-    marginBottom: "20px",
-    textAlign: "left",
-};
-
-const featureItemStyle = {
-    fontSize: "14px",
-    color: "#666",
-    marginBottom: "8px",
-};
-
-const buttonStyle = {
-    padding: "10px 20px",
-    backgroundColor: "#000",
-    color: "#fff",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-    fontSize: "16px",
 };
 
 export default PricingSection;

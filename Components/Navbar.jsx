@@ -7,18 +7,19 @@ const Navbar = () => {
 
   const scrollToSection = (id) => {
     if (id === "home") {
-      navigate("/"); // Redirect to the home page
+      navigate("/");
     } else if (id === "demo") {
-      navigate("/demo"); // Navigate to the /demo page
+      navigate("/demo");
     } else {
       const section = document.getElementById(id);
       if (section) {
         section.scrollIntoView({
-          behavior: "smooth", // Smooth scroll behavior
-          block: "start", // Aligns the section to the top of the viewport
+          behavior: "smooth",
+          block: "start",
         });
       }
     }
+    setIsMobileMenuOpen(false); // Close menu after navigation
   };
 
   return (
@@ -30,14 +31,13 @@ const Navbar = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        padding: "0 20px",
+        padding: "0 5%",
         boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
         position: "fixed",
         top: "0",
         left: "0",
         zIndex: "1000",
-        paddingLeft: "50px",
-        transition: "all 0.3s ease",
+        boxSizing: "border-box",
       }}
     >
       {/* Logo */}
@@ -54,12 +54,12 @@ const Navbar = () => {
         ReturnSage
       </Link>
 
-      {/* Hamburger Menu (visible only on mobile) */}
+      {/* Hamburger Menu for Mobile */}
       <div
         className="hamburger-menu"
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         style={{
-          display: "none", // Hidden by default for larger screens
+          display: "none", // Will be visible only in mobile view
           flexDirection: "column",
           justifyContent: "space-between",
           alignItems: "center",
@@ -73,15 +73,16 @@ const Navbar = () => {
         <div style={{ width: "100%", height: "4px", backgroundColor: "black" }} />
       </div>
 
-      {/* Links (for desktop and mobile) */}
+      {/* Desktop Links */}
       <div
+        className="desktop-links"
         style={{
           display: "flex",
-          gap: "30px",
-          paddingRight: "100px",
+          gap: "20px",
           alignItems: "center",
-          flex: "1",
           justifyContent: "flex-end",
+          maxWidth: "600px",
+          flexGrow: 1,
         }}
       >
         <a
@@ -104,33 +105,24 @@ const Navbar = () => {
         >
           Pricing
         </a>
-        <a
-          href="#demo"
-          onClick={(e) => {
-            e.preventDefault();
-            scrollToSection("demo");
-          }}
-          style={{ color: "black", textDecoration: "none" }}
-        >
-          Book a Demo
-        </a>
       </div>
 
-      {/* Mobile Menu (visible when the hamburger menu is clicked) */}
+      {/* Mobile Dropdown */}
       {isMobileMenuOpen && (
         <div
+          className="mobile-dropdown"
           style={{
+            position: "absolute",
+            top: "80px",
+            right: 0,
+            width: "100%",
+            backgroundColor: "#f7f7f7",
+            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+            padding: "10px 0",
             display: "flex",
             flexDirection: "column",
-            gap: "20px",
-            position: "absolute",
-            top: "80px", // Below the navbar
-            right: "20px",
-            backgroundColor: "white",
-            padding: "20px",
-            width: "200px",
-            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.15)",
-            zIndex: "999",
+            alignItems: "center",
+            zIndex: "1001",
           }}
         >
           <a
@@ -138,9 +130,14 @@ const Navbar = () => {
             onClick={(e) => {
               e.preventDefault();
               scrollToSection("features");
-              setIsMobileMenuOpen(false); // Close the menu after clicking
             }}
-            style={{ color: "black", textDecoration: "none" }}
+            style={{
+              color: "black",
+              textDecoration: "none",
+              padding: "10px",
+              width: "100%",
+              textAlign: "center",
+            }}
           >
             Features
           </a>
@@ -149,25 +146,51 @@ const Navbar = () => {
             onClick={(e) => {
               e.preventDefault();
               scrollToSection("pricing");
-              setIsMobileMenuOpen(false); // Close the menu after clicking
             }}
-            style={{ color: "black", textDecoration: "none" }}
+            style={{
+              color: "black",
+              textDecoration: "none",
+              padding: "10px",
+              width: "100%",
+              textAlign: "center",
+            }}
           >
             Pricing
           </a>
-          <a
-            href="#demo"
-            onClick={(e) => {
-              e.preventDefault();
-              scrollToSection("demo");
-              setIsMobileMenuOpen(false); // Close the menu after clicking
-            }}
-            style={{ color: "black", textDecoration: "none" }}
-          >
-            Book a Demo
-          </a>
         </div>
       )}
+
+      {/* Responsive Styles */}
+      <style>
+        {`
+          @media (max-width: 768px) {
+            .hamburger-menu {
+              display: flex;
+            }
+            .desktop-links {
+              display: none;
+            }
+            .mobile-dropdown {
+              padding: 0 5%;
+            }
+          }
+
+          @media (max-width: 480px) {
+            .hamburger-menu {
+              display: flex;
+            }
+            .desktop-links {
+              display: none;
+            }
+            .mobile-dropdown {
+              padding: 0 5%;
+            }
+            .mobile-dropdown a {
+              font-size: 14px;
+            }
+          }
+        `}
+      </style>
     </div>
   );
 };
