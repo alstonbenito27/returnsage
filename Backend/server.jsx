@@ -1,9 +1,10 @@
-require("dotenv").config({ path: "../.env" }); // Adjust the path based on your folder structure
+require("dotenv").config({ path: "../.env" });
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
+const path = require("path");
+const fs = require("fs-extra");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -13,35 +14,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
 
-// Connect to MongoDB
-mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.error("MongoDB connection error:", err));
-
-// Define schema for waitlist form data
-const waitlistSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  number: String,
-  company: String,
-  howDoYouKnow: String,
-});
-const Waitlist = mongoose.model("Waitlist", waitlistSchema, "waitlistreturn");
-
-// Define schema for demo form data
-const demoSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  number: String,
-  company: String,
-});
-const Demo = mongoose.model("Demo", demoSchema, "demoRequests");
-
-// Create a reusable transporter object using Gmail SMTP transport
+// Nodemailer transporter setup
 const transporter = nodemailer.createTransport({
   service: "gmail",
   host: "smtp.gmail.com",
@@ -52,9 +25,16 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS,
   },
 });
-// Define the validation function
+
+// Set projectRoot to the desired absolute path
+const projectRoot = 'C:\\Users\\alsto\\OneDrive\\Desktop\\Waitlist';
+
+// Initialize the database file path
+const dbPath = path.join(projectRoot, 'data.json');
+
+// Utility function to validate input fields
 const validateInput = (data, requiredFields) => {
-  for (let field of requiredFields) {
+  for (const field of requiredFields) {
     if (!data[field]) {
       return `${field.charAt(0).toUpperCase() + field.slice(1)} is required.`;
     }
@@ -62,8 +42,55 @@ const validateInput = (data, requiredFields) => {
   return null;
 };
 
+// Function to read the database file and initialize it if it doesn't exist
+async function readDb() {
+  try {
+    const dir = path.dirname(dbPath);
+    // Ensure the directory exists
+    if (!fs.existsSync(dir)) {
+      console.log("Directory does not exist, creating it...");
+      fs.mkdirSync(dir, { recursive: true });
+    }
 
-// Function to send confirmation email
+    // Check if the file exists, create it if not
+    if (!fs.existsSync(dbPath)) {
+      console.log("Database file does not exist. Creating a new one...");
+      await fs.writeJson(dbPath, { waitlist: [], demoRequests: [] });
+    }
+
+    // Log and read the database file
+    console.log("Database file exists, loading it...");
+    const data = await fs.readJson(dbPath);
+    return data;
+  } catch (error) {
+    console.error("Error reading or creating the db:", error.message);
+    throw new Error("Failed to read or create the db file.");
+  }
+}
+
+// Function to save form data to the database (using fs-extra)
+async function saveDataToDb(data, type) {
+  try {
+    const dbData = await readDb();
+
+    // Add data to the appropriate array
+    if (type === "waitlist") {
+      dbData.waitlist.push(data);
+    } else if (type === "demo") {
+      dbData.demoRequests.push(data);
+    }
+
+    // Write updated data to the file
+    await fs.writeJson(dbPath, dbData, { spaces: 2 });
+    console.log("Data saved to db");
+
+  } catch (error) {
+    console.error("Error saving data to db:", error.message);
+    throw new Error("Failed to save data to db.");
+  }
+}
+
+// Function to send emails
 const sendConfirmationEmail = async (recipientEmail, recipientName, type) => {
   const subject = type === "demo" ? "Your Demo Request Confirmation" : "Welcome to Our Waitlist!";
   const textContent =
@@ -73,11 +100,11 @@ const sendConfirmationEmail = async (recipientEmail, recipientName, type) => {
   const htmlContent =
     type === "demo"
       ? `<p>Hi <b>${recipientName}</b>,</p>
-         <p>Thank you for requesting a demo! We'll get back to you shortly.</p>
-         <p>Best regards,<br>Your App Team</p>`
+        <p>Thank you for requesting a demo! We'll get back to you shortly.</p>
+        <p>Best regards,<br>Your App Team</p>`
       : `<p>Hi <b>${recipientName}</b>,</p>
-         <p>Thank you for joining our waitlist! We're excited to have you on board.</p>
-         <p>Best regards,<br>Your App Team</p>`;
+        <p>Thank you for joining our waitlist! We're excited to have you on board.</p>
+        <p>Best regards,<br>Your App Team</p>`;
 
   const mailOptions = {
     from: `"Your App Name" <${process.env.EMAIL_USER}>`,
@@ -108,73 +135,60 @@ const sendConfirmationEmail = async (recipientEmail, recipientName, type) => {
   }
 };
 
-// Endpoint for waitlist
+// Waitlist API endpoint
+// Waitlist API endpoint
 app.post("/api/waitlist", async (req, res) => {
   const { name, email, number, company, howDoYouKnow } = req.body;
 
-  if (!name || !email) {
-    return res.status(400).json({ error: "Name and email are required." });
-  }
-
-  try {
-    const newWaitlistEntry = new Waitlist({
-      name,
-      email,
-      number,
-      company,
-      howDoYouKnow,
-    });
-    await newWaitlistEntry.save();
-
-    await sendConfirmationEmail(email, name, "waitlist");
-
-    res.status(200).json({ message: "Successfully joined the waitlist and confirmation email sent!" });
-  } catch (error) {
-    console.error("Error processing request:", error);
-    res.status(500).json({ error: "An error occurred while processing your request." });
-  }
-});
-
-// Endpoint for demo requests
-// Endpoint for demo requests
-app.post("/api/demo", async (req, res) => {
-  const { name, email, number, company } = req.body;
-
-  // Define the required fields
-  const requiredFields = ["name", "email", "number", "company"];
-
-  // Use the validateInput function
-  const validationError = validateInput(req.body, requiredFields);
+  // Validate input
+  const validationError = validateInput(req.body, ["name", "email"]);
   if (validationError) {
     return res.status(400).json({ error: validationError });
   }
 
+  const waitlistData = { name, email, number, company, howDoYouKnow };
+
   try {
-    // Log the request body for debugging
-    console.log("Received demo request:", req.body);
+    // Save data to db
+    await saveDataToDb(waitlistData, "waitlist");
 
-    const newDemoRequest = new Demo({ name, email, number, company });
-    await newDemoRequest.save();
+    // Send email notifications (corrected function call)
+    await sendConfirmationEmail(email, name, "waitlist");
 
-    try {
-      await sendConfirmationEmail(email, name, "demo");
-    } catch (emailError) {
-      console.error("Error sending confirmation email:", emailError.message);
-      return res.status(500).json({ error: "Failed to send confirmation email." });
-    }
-
-    res.status(200).json({
-      success: true,
-      message: "Demo request submitted successfully.",
-    });
+    res.status(200).json({ message: "Successfully joined the waitlist and confirmation email sent!" });
   } catch (error) {
-    // Log the error details to understand the issue
-    console.error("Error saving demo request:", error.message);
+    console.error("Error handling waitlist request:", error.message);
     res.status(500).json({ error: "An error occurred while processing your request." });
   }
 });
 
-// Start the Express server
+// Demo request API endpoint
+app.post("/api/demo", async (req, res) => {
+  const { name, email, number, company } = req.body;
+
+  // Validate input
+  const validationError = validateInput(req.body, ["name", "email", "number", "company"]);
+  if (validationError) {
+    return res.status(400).json({ error: validationError });
+  }
+
+  const demoData = { name, email, number, company };
+
+  try {
+    // Save data to db
+    await saveDataToDb(demoData, "demo");
+
+    // Send email notifications (corrected function call)
+    await sendConfirmationEmail(email, name, "demo");
+
+    res.status(200).json({ message: "Demo request submitted successfully and confirmation email sent!" });
+  } catch (error) {
+    console.error("Error handling demo request:", error.message);
+    res.status(500).json({ error: "An error occurred while processing your request." });
+  }
+});
+
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
