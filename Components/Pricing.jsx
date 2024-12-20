@@ -5,24 +5,24 @@ const PricingSection = () => {
         {
             title: "Beta/Pilot",
             price: "$14.99/month",
-            returnspost:"30 returns (post purchase)",
-            returns:"N/A",  // Add return field if needed
+            returnspost: "30 returns (post purchase)",
+            returns: "N/A",
             features: [
-                "Customized Returns", 
-                "Return Approval Dashboard", 
+                "Customized Returns",
+                "Return Approval Dashboard",
                 "Analytics",
-                "Returns: 30 returns (post purchase)", // Add returnspost in features
+                "Returns: 30 returns (post purchase)",
             ],
         },
         {
             title: "Start",
             price: "$29/month",
-            returnspost:"50 returns (post purchase)",
-            returns:"N/A",
+            returnspost: "50 returns (post purchase)",
+            returns: "N/A",
             features: [
-                "Bootstrap features", 
-                "Deep Analytics", 
-                "Semi automated approval", 
+                "Bootstrap features",
+                "Deep Analytics",
+                "Semi automated approval",
                 "Basic fraud protection",
                 "Returns: 50 returns (post purchase)",
             ],
@@ -30,13 +30,13 @@ const PricingSection = () => {
         {
             title: "Premium Plan",
             price: "$149/month",
-            returns:"5000 returns predictions",
-            returnspost:"100 returns (post purchase)",
+            returns: "5000 returns predictions",
+            returnspost: "100 returns (post purchase)",
             features: [
-                "Start features", 
-                "One prevention action", 
-                "Automated Approvals", 
-                "Actionable Analytics", 
+                "Start features",
+                "One prevention action",
+                "Automated Approvals",
+                "Actionable Analytics",
                 "ML powered fraud prevention",
                 "Returns: 5000 returns predictions",
                 "Returns: 100 returns (post purchase)",
@@ -45,11 +45,11 @@ const PricingSection = () => {
         {
             title: "Enterprise Plan",
             price: "Custom Pricing",
-            returns:"10000 returns predictions",
-            returnspost:"200 returns (post purchase)",
+            returns: "10000 returns predictions",
+            returnspost: "200 returns (post purchase)",
             features: [
-                "Grow features", 
-                "Customized Preventive actions", 
+                "Grow features",
+                "Customized Preventive actions",
                 "AI Copilot",
                 "AI/ML powered features",
                 "Returns: 10000 returns predictions",
@@ -57,6 +57,11 @@ const PricingSection = () => {
             ],
         },
     ];
+
+    // Access the email from the environment variable
+    const emailAdmin = import.meta.env.EMAIL_ADMIN;
+    console.log(emailAdmin); // For debugging purposes
+
     return (
         <>
             <style>
@@ -171,7 +176,7 @@ const PricingSection = () => {
                     /* Media Queries for Responsiveness */
                     @media (max-width: 768px) {
                         .pricing-card {
-                            width: 100%; /* Cards take full width on smaller screens */
+                            width: 100%;
                             margin-bottom: 30px;
                         }
 
@@ -230,8 +235,16 @@ const PricingSection = () => {
 
                 {/* Contact Link */}
                 <p className="sub-heading">
-                    Got Questions? <a href="mailto:alstonbeny@gmail.com" style={{ color: "blue", textDecoration: "none" }}>Contact Us</a>
-                </p>
+    Got Questions? 
+    <a 
+        href={`https://mail.google.com/mail/?view=cm&fs=1&to=${import.meta.env.VITE_EMAIL_ADMIN}&subject=Inquiry&body=Hello, I have a question...`} 
+        style={{ color: "blue", textDecoration: "none" }}
+    >
+        Contact Us
+    </a>
+</p>
+
+
             </div>
         </>
     );

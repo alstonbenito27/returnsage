@@ -89,7 +89,7 @@ const sendConfirmationEmail = async (recipientEmail, recipientName, type) => {
 
   const notificationMail = {
     from: `"Your App Name" <${process.env.EMAIL_USER}>`,
-    to: process.env.EMAIL_ADMIN,
+    to: process.env.VITE_EMAIL_ADMIN,
     subject: type === "demo" ? "New Demo Request Received" : "New Waitlist Entry Received",
     text: `${recipientName} submitted a ${type} request.`,
     html: `<p><b>${recipientName}</b> submitted a ${type} request. Check your dashboard for details.</p>`,
