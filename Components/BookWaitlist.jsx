@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
+
 const Waitlist = () => {
     const [hover, setHover] = useState(false);
     const [formData, setFormData] = useState({
@@ -13,6 +14,9 @@ const Waitlist = () => {
     });
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
+
+    // Lambda URL
+    const lambdaURL = 'https://7q5eccos63fe7kj72ac2w42kqm0wazaf.lambda-url.ap-south-1.on.aws/'; // Replace with your Lambda function URL
 
     // Input validation
     const validate = () => {
@@ -42,17 +46,20 @@ const Waitlist = () => {
             return;
         }
 
+        // Include the 'type' field for Lambda (2 for Waitlist)
+        const payload = { ...formData, type: 2 };
+
         try {
-            const response = await fetch('http://localhost:5000/api/waitlist', {
+            const response = await fetch(lambdaURL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(payload), // Send the form data to Lambda
             });
 
             const result = await response.json();
             if (response.ok) {
                 alert('You have successfully joined the waitlist!');
-                navigate('/');
+                navigate('/'); // Redirect to homepage after successful submission
             } else {
                 alert(result.error || 'An error occurred while submitting your information.');
             }
@@ -73,7 +80,7 @@ const Waitlist = () => {
                 <div
                     onClick={handleRedirect}
                     style={{
-                        marginTop:'60px',
+                        marginTop: '60px',
                         padding: '10px 20px',
                         backgroundColor: hover ? '#5cae9d' : '#6CCDC7',
                         borderRadius: '5px',
@@ -96,10 +103,7 @@ const Waitlist = () => {
                 </div>
 
                 {/* Form */}
-                <form
-                    onSubmit={handleSubmit}
-                    className="form-container"
-                >
+                <form onSubmit={handleSubmit} className="form-container">
                     {['name', 'email', 'number', 'company', 'howDoYouKnow'].map((field, index) => (
                         <div key={index}>
                             <label htmlFor={field}>
@@ -135,10 +139,7 @@ const Waitlist = () => {
                     ))}
 
                     {/* Submit Button */}
-                    <button
-                        type="submit"
-                        className="submit-button"
-                    >
+                    <button type="submit" className="submit-button">
                         Submit
                     </button>
                 </form>

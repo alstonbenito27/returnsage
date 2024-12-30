@@ -14,56 +14,77 @@ const Demo = () => {
     company: '',
   });
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false); // Loading state
   const navigate = useNavigate();
 
+  // Validation function
   const validate = () => {
     const newErrors = {};
-    if (!formData.name) newErrors.name = 'Name is required.';
+    if (!formData.name.trim()) newErrors.name = 'Name is required.';
     if (!formData.email) newErrors.email = 'Email is required.';
     else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Invalid email address.';
     if (!formData.number) newErrors.number = 'Phone number is required.';
-    else if (!/^\d{10}$/.test(formData.number)) newErrors.number = 'Invalid phone number.';
+    else if (!/^\+?\d{7,15}$/.test(formData.number)) newErrors.number = 'Invalid phone number.';
     if (!formData.company) newErrors.company = 'Company name is required.';
     return newErrors;
   };
 
+  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Form data before submission:", formData); // Log form data
+
+    setLoading(true); // Start loading
+
+    // Validate inputs
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
+      setLoading(false); // Stop loading if validation fails
       return;
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/demo', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-      const result = await response.json();
-      if (response.ok) {
+      const response = await fetch(
+        'https://7q5eccos63fe7kj72ac2w42kqm0wazaf.lambda-url.ap-south-1.on.aws/',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...formData, type: 1 }), // Include `type` field if needed
+        }
+      );
+
+      const result = await response.json(); // Get response body as JSON
+      console.log("Response from Lambda:", result); // Log the result
+
+      if (response.ok && result.message && result.message === 'Request processed successfully!') {
         alert('Your demo request has been successfully submitted!');
         navigate('/');
       } else {
-        alert(result.error || 'An error occurred while submitting your demo request.');
+        console.error("Error in response:", result); // Log error response
+        alert(result.message || 'An error occurred while submitting your demo request.');
       }
     } catch (error) {
-      console.error('Error submitting the form:', error);
+      console.error('Error submitting the form:', error); // Log any errors
       alert('An error occurred while submitting your demo request.');
+    } finally {
+      setLoading(false); // Stop loading after submission
     }
   };
 
+  // Handle redirection
   const handleRedirect = () => navigate('/');
 
   return (
     <div style={{ backgroundColor: 'white', minHeight: '100vh' }}>
       <Navbar />
+
       <div
         style={{
           padding: '5vw 5vw',
@@ -76,7 +97,7 @@ const Demo = () => {
         <div
           onClick={handleRedirect}
           style={{
-            marginTop:"70px",
+            marginTop: '70px',
             padding: '10px 20px',
             backgroundColor: hover ? '#5cae9d' : '#6CCDC7',
             borderRadius: '5px',
@@ -138,70 +159,71 @@ const Demo = () => {
 
           {/* Right Side (Form) */}
           <form
-  onSubmit={handleSubmit}
-  style={{
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '15px',
-    minWidth: '280px',
-    maxWidth: '400px',
-  }}
->
-  {['name', 'email', 'number', 'company'].map((field, index) => (
-    <div key={index}>
-      <label
-        htmlFor={field}
-        style={{ fontSize: '16px', marginBottom: '5px', display: 'block' }}
-      >
-        {`Your ${field.charAt(0).toUpperCase() + field.slice(1)}`}
-      </label>
-      <input
-        type={field === 'email' ? 'email' : field === 'number' ? 'tel' : 'text'}
-        id={field}
-        name={field}
-        value={formData[field]}
-        onChange={handleChange}
-        placeholder={`Your ${field}`}
-        style={{
-          padding: '10px',
-          fontSize: '16px',
-          borderRadius: '5px',
-          border: '1px solid #ccc',
-          width: '100%',
-          backgroundColor: '#fff', // White background
-          color: '#000', // Black text color
-        }}
-      />
-      {errors[field] && (
-        <p style={{ color: 'red', fontSize: '12px' }}>{errors[field]}</p>
-      )}
-    </div>
-  ))}
-  {/* Submit Button */}
-  <button
-    type="submit"
-    style={{
-      padding: '10px 20px',
-      backgroundColor: '#6CCDC7',
-      borderRadius: '5px',
-      color: 'white',
-      fontSize: '16px',
-      cursor: 'pointer',
-      width: '100%',
-    }}
-  >
-    Submit
-  </button>
-  {/* Placeholder Styles */}
-  <style>{`
-    input::placeholder {
-      color: #000; /* Black placeholder color */
-      opacity: 0.6; /* Slightly lighter for differentiation */
-    }
-  `}</style>
-</form>
+            onSubmit={handleSubmit}
+            style={{
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '15px',
+              minWidth: '280px',
+              maxWidth: '400px',
+            }}
+          >
+            {['name', 'email', 'number', 'company'].map((field, index) => (
+              <div key={index}>
+                <label
+                  htmlFor={field}
+                  style={{ fontSize: '16px', marginBottom: '5px', display: 'block' }}
+                >
+                  {`Your ${field.charAt(0).toUpperCase() + field.slice(1)}`}
+                </label>
+                <input
+                  type={field === 'email' ? 'email' : field === 'number' ? 'tel' : 'text'}
+                  id={field}
+                  name={field}
+                  value={formData[field]}
+                  onChange={handleChange}
+                  placeholder={`Your ${field}`}
+                  style={{
+                    padding: '10px',
+                    fontSize: '16px',
+                    borderRadius: '5px',
+                    border: '1px solid #ccc',
+                    width: '100%',
+                    backgroundColor: '#fff', // White background
+                    color: '#000', // Black text color
+                  }}
+                />
+                {errors[field] && (
+                  <p style={{ color: 'red', fontSize: '12px' }}>{errors[field]}</p>
+                )}
+              </div>
+            ))}
 
+            {/* Submit Button */}
+            <button
+              type="submit"
+              style={{
+                padding: '10px 20px',
+                backgroundColor: loading ? '#d3d3d3' : '#6CCDC7',
+                borderRadius: '5px',
+                color: 'white',
+                fontSize: '16px',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                width: '100%',
+              }}
+              disabled={loading} // Disable button during loading
+            >
+              {loading ? 'Submitting...' : 'Submit'}
+            </button>
+            {/* Placeholder Styles */}
+            <style>{`
+              input::placeholder {
+                color: #000; /* Black placeholder color */
+                opacity: 0.6; /* Slightly lighter for differentiation */
+              }
+            `}</style>
+          </form>
         </div>
       </div>
 

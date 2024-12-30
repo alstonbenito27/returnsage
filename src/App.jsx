@@ -5,7 +5,7 @@ import RowFlex from '../Components/Rowflex';
 import Pricing from '../Components/Pricing';
 import Footer from '../Components/Footer';
 import Demo from '../Components/Demo'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Waitlist from '../Components/BookWaitlist';
 
 const LandingPage = () => (

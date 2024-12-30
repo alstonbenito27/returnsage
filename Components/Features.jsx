@@ -5,31 +5,13 @@ import three from "../src/assets/3.png";
 import four from "../src/assets/4.png";
 
 const Features = () => {
-    const [isInView, setIsInView] = useState(false);
-
     const imageRef = useRef([]);
 
     useEffect(() => {
-        const observer = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('fade-in');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.2 });
-
+        // Simply add the fade-in class to all images directly
         imageRef.current.forEach((img) => {
-            observer.observe(img);
+            img.classList.add('fade-in');
         });
-
-        return () => {
-            if (imageRef.current) {
-                imageRef.current.forEach((img) => {
-                    observer.unobserve(img);
-                });
-            }
-        };
     }, []);
 
     return (

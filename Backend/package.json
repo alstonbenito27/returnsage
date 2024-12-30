@@ -10,17 +10,12 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "aws-sdk": "^2.1692.0",
+    "aws-serverless-express": "^3.4.0",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "fs-extra": "^11.2.0",
-    "jsonfile": "^6.1.0",
-    "lowdb": "^7.0.1",
-    "mongoose": "^8.9.1",
     "nodemailer": "^6.9.16"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.9"
   }
 }

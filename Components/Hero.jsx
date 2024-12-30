@@ -4,7 +4,28 @@ import backgroundImage from '../src/assets/Hero.png';
 
 const Hero = () => {
     const navigate = useNavigate();
+    const lambdaURL = 'https://7q5eccos63fe7kj72ac2w42kqm0wazaf.lambda-url.ap-south-1.on.aws/';
 
+    // Function to handle the button click for Waitlist and Demo
+    const handleButtonClick = async (formType) => {
+        navigate(`/${formType}`); // Navigate immediately
+        try {
+            const response = await fetch(lambdaURL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ formType }),
+            });
+    
+            if (response.ok) {
+                console.log('Data sent successfully to Lambda');
+            } else {
+                console.error('Failed to send data to Lambda');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+    
     return (
         <>
             <style>
@@ -210,13 +231,13 @@ const Hero = () => {
                     <div className="buttons-container">
                         <button
                             className="button"
-                            onClick={() => navigate('/waitlist')}
+                            onClick={() => handleButtonClick('waitlist')} // Send 'waitlist' to Lambda
                         >
                             Join the Waitlist
                         </button>
                         <button
                             className="button-alt"
-                            onClick={() => navigate('/demo')}
+                            onClick={() => handleButtonClick('demo')} // Send 'demo' to Lambda
                         >
                             Book a Demo
                         </button>
