@@ -4,6 +4,8 @@ import Navbar from './Navbar';
 import Features from './Features';
 import RowFlex from './Rowflex';
 import Footer from './Footer';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 
 const Demo = () => {
   const [hover, setHover] = useState(false);
@@ -16,6 +18,8 @@ const Demo = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false); // Loading state
   const navigate = useNavigate();
+
+  const lambdaURL = import.meta.env.VITE_LAMBDA_FUNCTION; // Use environment variable
 
   // Validation function
   const validate = () => {
@@ -35,6 +39,11 @@ const Demo = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Handle phone input change
+  const handlePhoneChange = (value) => {
+    setFormData((prev) => ({ ...prev, number: value }));
+  };
+
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,14 +60,11 @@ const Demo = () => {
     }
 
     try {
-      const response = await fetch(
-        'https://7q5eccos63fe7kj72ac2w42kqm0wazaf.lambda-url.ap-south-1.on.aws/',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...formData, type: 1 }), // Include `type` field if needed
-        }
-      );
+      const response = await fetch(lambdaURL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, type: 1 }), // Include `type` field if needed
+      });
 
       const result = await response.json(); // Get response body as JSON
       console.log("Response from Lambda:", result); // Log the result
@@ -169,7 +175,7 @@ const Demo = () => {
               maxWidth: '400px',
             }}
           >
-            {['name', 'email', 'number', 'company'].map((field, index) => (
+            {['name', 'email', 'company'].map((field, index) => (
               <div key={index}>
                 <label
                   htmlFor={field}
@@ -178,7 +184,7 @@ const Demo = () => {
                   {`Your ${field.charAt(0).toUpperCase() + field.slice(1)}`}
                 </label>
                 <input
-                  type={field === 'email' ? 'email' : field === 'number' ? 'tel' : 'text'}
+                  type={field === 'email' ? 'email' : 'text'}
                   id={field}
                   name={field}
                   value={formData[field]}
@@ -199,6 +205,42 @@ const Demo = () => {
                 )}
               </div>
             ))}
+
+            {/* Phone Number Field with Country Code Dropdown */}
+            <div>
+              <label htmlFor="number" style={{ fontSize: '16px', marginBottom: '5px', display: 'block' }}>
+                Your Phone Number
+              </label>
+              <PhoneInput
+                            country="us"
+                            value={formData.number}
+                            onChange={handlePhoneChange}
+                            containerStyle={{
+                                width: '100%',
+                                display: 'flex', // Use flex to align elements
+                            }}
+                            inputStyle={{
+                                width: '100%',
+                                borderRadius: '5px',
+                                border: '1px solid #ccc',
+                                padding: '10px',
+                                fontSize: '16px',
+                                backgroundColor: 'white',
+                                color: 'black',
+                                marginLeft: '35px', // Add left margin to create space between country code dropdown and input
+                            }}
+                            buttonStyle={{
+                                backgroundColor: 'white',
+                                border: '1px solid #ccc',
+                                borderRadius: '5px',
+                            }}
+                            dropdownStyle={{
+                                backgroundColor: 'white',
+                                color: 'black',
+                            }}
+                        />
+              {errors.number && <p style={{ color: 'red', fontSize: '12px' }}>{errors.number}</p>}
+            </div>
 
             {/* Submit Button */}
             <button

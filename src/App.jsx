@@ -7,6 +7,7 @@ import Footer from '../Components/Footer';
 import Demo from '../Components/Demo'
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Waitlist from '../Components/BookWaitlist';
+import PrivacyPolicy from '../Components/Privacy';
 
 const LandingPage = () => (
   <div>
@@ -27,6 +28,7 @@ const App = () => {
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/demo" element={<Demo />} />
                 <Route path="/waitlist" element={<Waitlist/>} />
+                <Route path="/privacypolicy" element={<PrivacyPolicy />} />
             </Routes>
         </Router>
   );

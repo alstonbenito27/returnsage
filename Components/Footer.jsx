@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Footer = () => {
   const [email, setEmail] = useState('');
@@ -12,7 +13,8 @@ const Footer = () => {
     // Add your form submission logic here
     alert(`Subscribed with email: ${email}`);
   };
-
+  const navigate = useNavigate();
+  const handleRedirect = () => navigate('/privacypolicy');
   return (
     <>
       <style>
@@ -145,7 +147,10 @@ const Footer = () => {
 
         <div className="section-container">
           <div className="section-title">Legal</div>
-          <div className="link">Privacy Policy</div>
+          <div onClick={handleRedirect} 
+          className="link">
+          Privacy Policy
+          </div>
           <div className="link">Terms of Use</div>
         </div>
       </footer>
